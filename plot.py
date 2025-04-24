@@ -1,9 +1,6 @@
 import plotly.express as px
 
-def graficaA():
-    df = px.data.iris()
-    fig = px.scatter(df, x="petal_length", y="petal_width", color="species",
-                 size='sepal_width', hover_data=['sepal_length'])
+def graficaA(df):
+    fig = px.scatter(df, x="PetalLengthCm", y="PetalWidthCm", color="Species",
+                 size='SepalWidthCm', hover_data=['SepalLengthCm'])
     fig.show()
-
-graficaA()

@@ -1,8 +1,5 @@
 import plotly.express as px
 
-def graficaL():
-    df = px.data.iris()
-    fig = px.scatter(df, x="petal_width", y="petal_length", color='sepal_length')
+def graficaL(df):
+    fig = px.scatter(df, x="PetalWidthCm", y="PetalLengthCm", color='SepalLengthCm')
     fig.show()
-
-graficaL()
