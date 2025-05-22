@@ -41,8 +41,9 @@ def load_data(path:str)->pd.DataFrame:
     return table
 
 
-def polinomic_fit(x_data:pd.Series,y_data:pd.Series,degree:int = 0)->list[float]:
-    temp = x_data.to_frame().join(y_data)
+def polinomic_fit(x_data:pd.Series,y_data:pd.Series,degree:int = 0):
+    temp = x_data.to_frame()
+    temp[y_data.name] = y_data
     temp = temp.dropna()
     temp = temp.astype(np.float64)
     coeficients = np.polyfit(temp[x_data.name],temp[y_data.name],degree)
@@ -58,8 +59,8 @@ def ploly_sactter(data:pd.DataFrame,xlable:str,ylable:str,titulo:str = "",inecua
     fig = px.scatter(data_plt,x=xlable,y=ylable,hover_name=locations,title=titulo)
     fig.update_layout(xaxis_title=traductor["INDICATOR"][xlable],yaxis_title=traductor["INDICATOR"][ylable])
     if(trend > 0):
-        z = polinomic_fit(data[xlable],data[ylable],trend)
-        fig.add_trace(go.Scatter(x=data[xlable],y=z,mode='lines'))
+        z = polinomic_fit(data_plt[xlable],data_plt[ylable],trend)
+        fig.add_trace(go.Scatter(x=data_plt[xlable],y=z,mode='lines'))
 
     fig.show()
 
