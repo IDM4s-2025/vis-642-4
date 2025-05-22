@@ -49,9 +49,13 @@ def polinomic_fit(x_data:pd.Series,y_data:pd.Series,degree:int = 0)->list[float]
     fit = np.poly1d(coeficients)
     return list(fit(x_data))
 
-def ploly_sactter(data:pd.DataFrame,xlable:str,ylable:str,trend:int = 0):
-    locations = data["LOCATION"].map(traductor["LOCATION"])
-    fig = px.scatter(data,x=xlable,y=ylable,hover_name=locations)
+def ploly_sactter(data:pd.DataFrame,xlable:str,ylable:str,titulo:str = "",inecual:str = "TOT",trend:int = 0):
+    data_plt = data[data["INEQUALITY"] == inecual]
+    #data_plt = data
+    locations = data_plt["LOCATION"].map(traductor["LOCATION"])
+    if (titulo == ""):
+        titulo = traductor["INDICATOR"][xlable]+ " contra "+traductor["INDICATOR"][ylable]
+    fig = px.scatter(data_plt,x=xlable,y=ylable,hover_name=locations,title=titulo)
     fig.update_layout(xaxis_title=traductor["INDICATOR"][xlable],yaxis_title=traductor["INDICATOR"][ylable])
     if(trend > 0):
         z = polinomic_fit(data[xlable],data[ylable],trend)
@@ -59,19 +63,25 @@ def ploly_sactter(data:pd.DataFrame,xlable:str,ylable:str,trend:int = 0):
 
     fig.show()
 
-def plotly_line(data:pd.DataFrame,xlable:str,ylable:str):
-    locations = data["LOCATION"].map(traductor["LOCATION"])
-    fig = px.plot(data,x=xlable,y=ylable,hover_name=locations)
+def plotly_line(data:pd.DataFrame,xlable:str,ylable:str,titulo:str = "",inecual:str = "TOT"):
+    #data_plt = data[data["INEQUALITY"] == inecual]
+    data_plt = data
+    locations = data_plt["LOCATION"].map(traductor["LOCATION"])
+    if (titulo == ""):
+        titulo = traductor["INDICATOR"][xlable]+ " contra "+traductor["INDICATOR"][ylable]
+    fig = px.plot(data_plt,x=xlable,y=ylable,hover_name=locations,title=titulo)
     fig.update_layout(xaxis_title=traductor["INDICATOR"][xlable],yaxis_title=traductor["INDICATOR"][ylable])
     fig.show()
 
-def get_corelation(data:pd.DataFrame,graph_dimentions:tuple[float,float]=(None,None),col:list = ["LOCATION","INEQUALITY"]):
+def get_corelation(data:pd.DataFrame,graph_dimentions:tuple[float,float]=(None,None),inecual:str = "TOT",col:list = ["LOCATION","INEQUALITY"]):
     if (graph_dimentions != (None,None)):
        plt.figure(figsize=graph_dimentions)
     else:
         plt.figure()
 
     plt.title('CORRELATION MATRIX', fontweight='bold') 
-    sns.heatmap(data.drop(columns=col).corr(), annot=True)
+    #data_plt = data[data["INEQUALITY"] == inecual]
+    data_plt = data
+    sns.heatmap(data_plt.drop(columns=col).corr(), annot=True)
     
     plt.show()
